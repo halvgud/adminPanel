@@ -33,6 +33,12 @@ class User extends \TCG\Voyager\Models\User
         'password', 'remember_token',
     ];
 
+    public function roleId()
+    {
+        return $this->belongsTo('Roles::class');
+    }
+
+
     /**
      * The attributes that should be cast to native types.
      *

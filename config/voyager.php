@@ -144,7 +144,7 @@ return [
         ],
 
         'widgets' => [
-           // 'TCG\\Voyager\\Widgets\\UserDimmer',
+
         ],
 
     ],
@@ -191,7 +191,7 @@ return [
     ],
 
     'additional_js' => [
-        //'js/custom.js',
+        'js/custom.js',
     ],
 
     'googlemaps' => [
@@ -201,6 +201,21 @@ return [
             'lng' => env('GOOGLE_MAPS_DEFAULT_CENTER_LNG', '-117.161084'),
         ],
         'zoom' => env('GOOGLE_MAPS_DEFAULT_ZOOM', 11),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model specific settings
+    |--------------------------------------------------------------------------
+    |
+    | Here you change some model specific settings
+    |
+    */
+
+    'settings' => [
+        // Enables Laravel cache method for
+        // storing cache values between requests
+        'cache' => false,
     ],
 
     // Activate compass when environment is NOT local

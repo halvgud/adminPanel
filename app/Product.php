@@ -20,6 +20,10 @@ class Product extends Model
         return $this->belongsTo('App\Vendor');
     }
 
+    public function vendorLocation(){
+        return $this->belongsTo('App\VendorLocation','location');
+    }
+
    /* public static function boot()
     {
         parent::boot();
