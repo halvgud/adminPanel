@@ -14,4 +14,21 @@ class PurchaseOrder extends Model
     {
         return $this->belongsTo('App\Product');
     }
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            $model->warehouse_id = \Auth::user()->role_id;
+        });
+    }
+    
+    public function scopeCurrentRoleId($query)
+    {
+        $currWar = \Auth::user()->role_id;
+        if($currWar!='1'&&$currWar!='3'){
+            return $query->where('warehouse_id', \Auth::user()->role_id);
+        }else {
+            return $query;
+        }
+    }
 }
