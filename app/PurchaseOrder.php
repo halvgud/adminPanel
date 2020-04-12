@@ -33,6 +33,10 @@ class PurchaseOrder extends Model
             return $query;
         }
     }
+    public function getQtyBrowseAttribute()
+    {
+        return number_format($this->unit_price, 2);
+    }
     public function getUnitPriceBrowseAttribute()
     {
         return '$' . number_format($this->unit_price, 2);
