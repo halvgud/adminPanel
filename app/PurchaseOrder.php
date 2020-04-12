@@ -33,4 +33,17 @@ class PurchaseOrder extends Model
             return $query;
         }
     }
+    public function getUnitPriceAttribute($value)
+    {
+        return '$' . number_format($value, 2);
+    }
+    public function getPaymentTotalAttribute($value)
+    {
+        return '$' . number_format($value, 2);
+    }
+    public function getPaymentAmountAttribute($value)
+    {
+        return '$' . number_format($value, 2);
+    }
+   
 }

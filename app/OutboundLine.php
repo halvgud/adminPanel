@@ -3,19 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OutboundShipping extends Model
+
+class OutboundLine extends Model
 {
-    public $table = 'outbound_shippings';
-    use SoftDeletes;
-    protected $dates = ['deleted_at'];
+    public $table= 'outbound_lines';
 
     public static function boot()
     {
         parent::boot();
         self::creating(function ($model) {
-            $model->warehouse_id = \Auth::user()->role_id;
             $model->user_id = \Auth::user()->id;
         });
     }
