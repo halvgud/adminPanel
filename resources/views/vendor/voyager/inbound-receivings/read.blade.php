@@ -148,7 +148,7 @@
                                 </thead>
                                 @foreach($dataTypeContent2 as $data)
                                     <tr>             
-                                        <td>{{$data->product_id}}</td>
+                                        <td>{{$data->model}}</td>
                                         <td>{{$data->palletsscc}}</td>
                                         <td>{{$data->cartonsinpallet}}</td>
                                         <td>{{$data->unitsincarton}}</td>

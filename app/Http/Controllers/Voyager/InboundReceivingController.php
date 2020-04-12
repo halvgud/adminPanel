@@ -87,7 +87,7 @@ class InboundReceivingController extends \TCG\Voyager\Http\Controllers\VoyagerBa
             // If Model doest exist, get data from table name
             $dataTypeContent = DB::table($dataType->name)->where('id', $id)->first();
         }
-        $dataTypeContent2 = DB::table('inbound_lines')->where('inbound_receiving_id', $id)->get()->all();
+        $dataTypeContent2 = DB::table('inbound_lines')->join('products','inbound_lines.product_id','products.id')->where('inbound_receiving_id', $id)->get()->all();
         // Replace relationships' keys for labels and create READ links if a slug is provided.
         $dataTypeContent = $this->resolveRelations($dataTypeContent, $dataType, true);
         $dataTypeContent2 = $this->resolveRelations($dataTypeContent2, $dataType, true);
