@@ -3,12 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseOrder extends Model
 {
     public $table = 'purchase_orders';
     public $fillable = ['orderedby', 'taxid', 'billto','customername','shiptoaddress'];
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
     public function productId()
     {
@@ -21,7 +23,7 @@ class PurchaseOrder extends Model
             $model->warehouse_id = \Auth::user()->role_id;
         });
     }
-    
+
     public function scopeCurrentRoleId($query)
     {
         $currWar = \Auth::user()->role_id;

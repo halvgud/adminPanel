@@ -28,6 +28,7 @@ return [
 
     'controllers' => [
         'namespace' => 'TCG\\Voyager\\Http\\Controllers',
+        //'namespace' => 'App\\Http\\Controllers\Back',
     ],
 
     /*
@@ -188,10 +189,14 @@ return [
     // Here you can specify additional assets you would like to be included in the master.blade
     'additional_css' => [
         //'css/custom.css',
+        'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css'
     ],
 
     'additional_js' => [
         'js/custom.js',
+        'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js',
     ],
 
     'googlemaps' => [
@@ -219,7 +224,7 @@ return [
     ],
 
     // Activate compass when environment is NOT local
-    'compass_in_production' => false,
+    'compass_in_production' => true,
 
     'media' => [
         // The allowed mimetypes to be uploaded through the media-manager.

@@ -4,13 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Product extends Model
 {
     public $table = 'products';
     protected $primaryKey = 'id';
-
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     public $fillable = ['name','upc','product_reference','product','sku','palletsize','cartonsize'];
     /**
      * The shops that belong to the product.
