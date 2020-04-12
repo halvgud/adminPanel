@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Voyager;
 
 use App\OutboundShipping;
-use App\InboundLine;
+use App\OutboundLine;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use TCG\Voyager\Events\BreadAdded;
@@ -33,11 +33,11 @@ class OutboundShippingController extends \TCG\Voyager\Http\Controllers\VoyagerBa
         // Check permission
         $this->authorize('add', app($dataType->model_name));
         $outboundShipping = new OutboundShipping;
-        $inboundLines= json_decode($request->input('DynamicField2'), true)['OutboundLinesInfo'];
+        $inboundLines= json_decode($request->input('DynamicField2'), true)['InboundLinesInfo'];
         
         $outboundShipping->status = $request->input('status');
         $outboundShipping->ship_to = $request->input('ship_to');
-        $outboundShipping->outbound = $request->input('outbound_number');
+        $outboundShipping->outbound_number = $request->input('outbound_number');
         $outboundShipping->reference = $request->input('reference');
         $outboundShipping->qty = $request->input('qty');
         $outboundShipping->tracking_number = $request->input('tracking_number');
@@ -45,8 +45,8 @@ class OutboundShippingController extends \TCG\Voyager\Http\Controllers\VoyagerBa
         $outboundShippingId= $outboundShipping->id;
 
         foreach ($inboundLines as &$valor) {
-           $inboundLine = new InboundLine;
-           $inboundLine->inbound_receiving_id=$outboundShippingId;
+           $inboundLine = new OutboundLine;
+           $inboundLine->outbound_shipping_id=$outboundShippingId;
             $inboundLine->palletsscc = $valor['palletsscc'];
             $inboundLine->cartonsinpallet = $valor['cartonsinpallet'];
             $inboundLine->unitsincarton = $valor['unitsincarton'];
@@ -87,7 +87,7 @@ class OutboundShippingController extends \TCG\Voyager\Http\Controllers\VoyagerBa
             // If Model doest exist, get data from table name
             $dataTypeContent = DB::table($dataType->name)->where('id', $id)->first();
         }
-        $dataTypeContent2 = DB::table('outbound_lines')->join('products','outbound_lines.product_id','products.id')->where('inbound_receiving_id', $id)->get()->all();
+        $dataTypeContent2 = DB::table('outbound_lines')->join('products','outbound_lines.product_id','products.id')->where('outbound_shipping_id', $id)->get()->all();
         // Replace relationships' keys for labels and create READ links if a slug is provided.
         $dataTypeContent = $this->resolveRelations($dataTypeContent, $dataType, true);
         $dataTypeContent2 = $this->resolveRelations($dataTypeContent2, $dataType, true);
