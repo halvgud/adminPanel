@@ -192,7 +192,7 @@ if ($('input[name="DynamicField2"').length) {
     var btn = $('<input type="button" id="addPallets" name="addPallets" class="btn btn-warning addPallets" value="add Pallets">');
     $('input[name="DynamicField2"').closest('div').append(btn);
     $('body').on('click', '.addPallets', function () {
-        fetch('http://dtmwarehouselogistics.com/public/api/products')
+        fetch('http://voyager.local/public/api/products')
             .then(response => {
                 return response.json();
             })
