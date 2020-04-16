@@ -1,7 +1,9 @@
 @extends('voyager::master')
 
 @section('page_title', __('voyager::generic.viewing').' '.$dataType->getTranslatedAttribute('display_name_plural'))
-
+<style>
+    th { white-space: nowrap; }
+</style>
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
@@ -35,7 +37,7 @@
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         <div class="col-md-12">
@@ -67,14 +69,7 @@
                                     </tr>
                                     @endforeach
                                 </tbody>
-                                 <tfoot id="footers">
-                                    <tr class="">
-                                        <th style='text-align:center'>Total</th>
-                                        <th style='text-align:right' id="sumCustomerTotal"></th>
-                                        <th style='text-align:right' id="sumTotalPaid"></th>
-                                        <th style='text-align:right' id="sumAmountDue"></th>
-                                    </tr>
-                                </tfoot>
+                                 
                             </table>
                         </div>
                         </div>
@@ -86,22 +81,21 @@
 @stop
 
 @section('css')
-@if(!$dataType->server_side && config('dashboard.data_tables.responsive'))
-    <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
-@endif
+
 @stop
 
 @section('javascript')
     <!-- DataTables -->
-    @if(!$dataType->server_side && config('dashboard.data_tables.responsive'))
-        <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
-    @endif
+
     <script>
         var sumCustomerTotal=0;
         var sumTotalPaid=0;
         var sumAmountDue=0;
 
         $(document).ready(function () {
+               $("#dataTable").append(
+       $('<tfoot/>').append( $("#dataTable thead tr").clone() )
+   );
             @if (!$dataType->server_side)
             var options={!!json_encode(
                     array_merge([
@@ -133,17 +127,13 @@
                     sumCustomerTotal = api.column( 1 ).data().reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );                        
-
+                    $( api.column( 0 ).footer() ).html('Total ');
                     $( api.column( 3 ).footer() ).html('$'+(sumAmountDue+'').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
                     $( api.column( 2 ).footer() ).html('$'+(sumTotalPaid+'').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
-                    $( api.column( 1 ).footer() ).html('$'+(sumCustomerTotal+'').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
-        
-                    // Update footer
-                    
-                
+                    $( api.column( 1 ).footer() ).html('$'+(sumCustomerTotal+'').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')); 
             }
             var table = $('#dataTable').DataTable(options);
-                $tfoot = $('.dataTables_wrapper tfoot ').removeClass("hide");
+            $('tfoot').show();
             @else
                 $('#search-input select').select2({
                     minimumResultsForSearch: Infinity
