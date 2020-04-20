@@ -144,8 +144,17 @@
              $('.pvtTable').addClass('table table-condensed dataTable'); 
              // $('.pvtAxisLabel th[html="contract"] ').before('<th>actions</th>');
              $('.pvtTable').find('tr').each(function(i,v){
+                 if(i==0){
+                     // $(this).find('th').eq(0).html('');
+                      $(this).find('th').eq(1).html('');
+                 }
                  if(i==1){
                      $(this).find('th').eq(0).html('Actions');
+                      $(this).find('th').eq(1).html('Contract');
+                      $(this).find('th').eq(2).html('Payment Term');
+                      $(this).find('th').eq(3).html('Model');
+                      $(this).find('th').eq(4).html('Qty');
+                      $(this).find('th').eq(5).html('Shipment Date');
                  }
                  if(i>1&&i<$('.pvtTable').find('tr').length-1){
                     var currentVal=$(this).find('th').eq(0).html();
