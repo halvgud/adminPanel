@@ -149,9 +149,10 @@
                  }
                  if(i>1&&i<$('.pvtTable').find('tr').length-1){
                     var currentVal=$(this).find('th').eq(0).html();
+                    console.log('{{url()->current()}}');
                     $(this).find('th').eq(0).html(
-                        '<a href="http://voyager.local/public/admin/forecast/'+currentVal+'" title="View" class="btn btn-sm btn-warning pull-right view"><i class="voyager-eye"></i> <span class="hidden-xs hidden-sm"></span></a>'+
-                        '<a href="http://voyager.local/public/admin/forecast/'+currentVal+'/edit" title="Edit" class="btn btn-sm btn-primary pull-right edit"><i class="voyager-edit"></i> <span class="hidden-xs hidden-sm"></span></a>');
+                        '<a href="{{url()->current()}}/'+currentVal+'" title="View" class="btn btn-sm btn-warning pull-right view"><i class="voyager-eye"></i> <span class="hidden-xs hidden-sm"></span></a>'+
+                        '<a href="{{url()->current()}}/'+currentVal+'/edit" title="Edit" class="btn btn-sm btn-primary pull-right edit"><i class="voyager-edit"></i> <span class="hidden-xs hidden-sm"></span></a>');
                  }
              });
             @if (!$dataType->server_side)
