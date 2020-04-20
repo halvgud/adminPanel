@@ -297,7 +297,6 @@ class ForecastController extends \TCG\Voyager\Http\Controllers\VoyagerBaseContro
 
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'edit');
-
         // Check permission
         $this->authorize('edit', $dataTypeContent);
 
@@ -325,7 +324,10 @@ class ForecastController extends \TCG\Voyager\Http\Controllers\VoyagerBaseContro
      */
     public function update(Request $request, $id)
     {
-        $this->authorize('browse_bread');
+       // dd($this->authorize('forecast_edit'));
+        // Check permission
+       // $this->authorize('edit', $data);
+
 
         /* @var \TCG\Voyager\Models\DataType $dataType */
         try {
