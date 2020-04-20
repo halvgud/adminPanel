@@ -141,7 +141,7 @@
                 }
                 }
              $('#output' ).pivot(myServices, propertiesTable);
-             $('.pvtTable').addClass('table table-condensed dataTable'); 
+             $('.pvtTable').addClass('table table-responsive dataTable nowrap'); 
              // $('.pvtAxisLabel th[html="contract"] ').before('<th>actions</th>');
              $('.pvtTable').find('tr').each(function(i,v){
                  if(i==0){
