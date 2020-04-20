@@ -8,6 +8,20 @@ $('input[name="unit_price"]').on('change', function () {
     var uP = $('input[name="unit_price"]').val();
     $('input[name="payment_total"]').val(qty * uP);
 });
+
+if ($('input[name="contract"').length) {
+    $('input[name="quantity"]').on('change', function () {
+        var qty = $('input[name="quantity"]').val();
+        var uP = $('input[name="unit_cost"]').val();
+        $('input[name="total_contract_cost"]').val(qty * uP);
+    });
+    $('input[name="unit_cost"]').on('change', function () {
+        var qty = $('input[name="quantity"]').val();
+        var uP = $('input[name="unit_cost"]').val();
+        $('input[name="total_contract_cost"]').val(qty * uP);
+    });
+
+}
 var modal = "";
 //inboundReceiving
 if ($('input[name="DynamicField"').length) {
