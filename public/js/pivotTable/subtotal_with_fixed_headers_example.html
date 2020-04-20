@@ -1,0 +1,112 @@
+<html>
+	<head>
+		<title>NReco PivotTable.js Extensions Example: Subtotal.js + fixed headers</title>
+
+		<!-- pivottable.js requires jQuery -->
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+		
+		<!-- jQuery UI sortable plugin for drag and drop - required only for pivotUI  -->
+		<script src="Scripts/jquery-ui-1.9.2.custom.min.js"></script>
+		<!-- OPTIONAL: support touch events (pivot table usage from mobile and tablet devices) -->
+		<script src="Scripts/jquery.ui.touch-punch.min.js"></script>	
+		
+
+		<!-- PivotTable.js plugin with renderers -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/pivot.min.js"></script>
+		<!-- note: renderers are OPTIONAL (useful are: google charts, c3 charts) -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/export_renderers.min.js"></script>
+		
+		<!-- subtotal.js -->
+        <script type="text/javascript" src="http://nagarajanchinnasamy.com/subtotal/dist/subtotal.js"></script>
+        <script type="text/javascript" src="Scripts/subtotal.js"></script>
+		
+		
+        <link rel="stylesheet" type="text/css" href="http://nagarajanchinnasamy.com/subtotal/dist/subtotal.css">
+		
+		<!-- NReco extensions -->
+		<script src="Scripts/pivottable/nrecopivottableext.js"></script>
+		
+		<!-- basic pivottable css -->
+		<link href="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/pivot.min.css" rel="stylesheet" type="text/css" />	
+		<!-- NReco extensions css -->
+		<link href="Scripts/pivottable/nrecopivottableext.css" rel="stylesheet" />	
+		
+		
+		<!-- some styles for this example -->
+		<style>
+			.pivotHolder {
+				max-height:400px;  /* limit table height if needed */
+				max-width:800px;
+				overflow:auto;
+				display:inline-block;
+			}	
+		</style>
+	</head>
+	<body>
+		<div class="container">
+		
+	<h1>PivotTable.js + Subtotal.js + NReco fixed headers</h1>
+
+	
+	<div id="samplePivotTable" class="pivotHolder"></div>
+		
+    <script type="text/javascript">
+    // This example loads the "Canadian Parliament 2012" dataset
+
+    $(function(){
+        var dataClass = $.pivotUtilities.SubtotalPivotData;
+        var renderer = $.pivotUtilities.subtotal_renderers["Table With Subtotal"];
+
+		var nrecoPivotExt = new NRecoPivotTableExtensions({
+			fixedHeaders : false,
+			sortByLabelEnabled: false,
+			sortByColumnsEnabled: false,
+			sortByRowsEnabled: false,
+		});
+		
+        $.getJSON("https://pivottable.js.org/examples/mps.json", function(mps) {
+            $("#samplePivotTable").pivot(mps, {
+                dataClass: dataClass,
+                rows: ["Gender", "Province"],
+                cols: ["Party", "Age"],
+                renderer: nrecoPivotExt.wrapTableRenderer( renderer )
+            });
+			
+			nrecoPivotExt.initFixedHeaders( $("#samplePivotTable").find('table.pvtTable'));
+			
+			// TH click workaround for subtotal.js
+			// subtotal.js expects TH element in event.target for collapse/expand, lets emulate it
+			$('#samplePivotTable th').each(function() {
+				if (this.onclick) {
+					var onclickHandler = this.onclick;
+					this.onclick = function(ev) {
+						// prevent double events
+						if (ev.target.className.indexOf('pvtFixedHeader')<0)
+							onclickHandler(ev);
+					};
+				}
+			}); 
+			$('#samplePivotTable').on("click", '.pvtFixedHeader', function(ev) {
+				if (this.parentNode.onclick) { 
+					ev.stopPropagation();
+					if (this.parentNode.fireEvent) {
+						this.parentNode.fireEvent('onclick');
+					} else {
+						var evObj = document.createEvent('Events');
+						evObj.initEvent('click', true, false);
+						this.parentNode.dispatchEvent(evObj);
+						nrecoPivotExt.fixedHeaders.refresh();
+					}					
+					return false; 
+				};
+			});
+			
+        });
+     });
+    </script>
+
+	
+		</div>
+	
+	</body>
+</html>

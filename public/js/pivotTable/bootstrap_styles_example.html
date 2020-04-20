@@ -1,0 +1,135 @@
+<html>
+	<head>
+		<title>NReco PivotTable.js Extensions Example: Bootstrap styles</title>
+
+		<!-- pivottable.js requires jQuery -->
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+		
+		<!-- jQuery UI sortable plugin for drag and drop - required only for pivotUI  -->
+		<script src="Scripts/jquery-ui-1.9.2.custom.min.js"></script>
+		<!-- OPTIONAL: support touch events (pivot table usage from mobile and tablet devices) -->
+		<script src="Scripts/jquery.ui.touch-punch.min.js"></script>	
+		
+
+		<!-- PivotTable.js plugin with renderers -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/pivot.min.js"></script>
+		
+		<!-- note: renderers are OPTIONAL (useful are: google charts, c3 charts) -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/export_renderers.min.js"></script>
+		
+		<!-- NReco extensions -->
+		<script src="Scripts/pivottable/nrecopivottableext.js"></script>
+		
+		<!-- basic pivottable css -->
+		<link href="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/pivot.min.css" rel="stylesheet" />	
+		<!-- NReco extensions css -->
+		<link href="Scripts/pivottable/nrecopivottableext.css" rel="stylesheet" />	
+		
+		<!-- bootstrap -->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>	
+		
+		<!-- some styles for this example -->
+		<style>
+			/* styles for responsive pivot UI + bootstrap-like styles */			
+			
+			.pivotHolder table.pvtUi {
+				table-layout:fixed;
+			}
+				.pivotHolder select {
+					visibility:hidden;
+				}
+					.pivotHolder select.form-control {
+						visibility:visible;
+					}
+
+			.pivotHolder > table.pvtUi, .pivotHolder table.pvtTable {
+				width:100%;
+				margin-bottom:0px;
+			}
+				.pivotHolder > table.pvtUi>tbody>tr>td, .pivotHolder > table.pvtUi>tbody>tr>th {
+					border: 1px solid #ddd;
+				}
+				.pivotHolder .pvtAxisContainer li span.pvtAttr {
+					height:auto;
+					white-space:nowrap;
+				}
+				.pivotHolder .pvtAxisContainer.pvtUnused, .pivotHolder .pvtAxisContainer.pvtCols {
+					vertical-align:middle;
+				}
+
+			.pivotHolder > table.pvtUi>tbody>tr:first-child > td:first-child {
+				width:250px;
+			}
+
+			.pivotHolder td.pvtRendererArea {
+				padding-bottom:0px;
+				padding-right:0px;
+				border-bottom-width:0px !important;
+				border-right-width:0px !important;
+			}
+			.pivotHolder td.pvtVals br { display:none; }			
+			
+			.pvtRendererArea>div {
+				overflow:auto;
+			}
+			
+			.pvtTableRendererHolder {
+				max-height:600px;  /* limit table height if needed */
+			}	
+		</style>
+	</head>
+	<body>
+		<div class="container">
+		
+	<h1>NReco PivotTable.js with Bootstrap styles</h1>
+
+	
+	<div id="samplePivotTable" class="pivotHolder"></div>
+		
+	<script type="text/javascript">
+		$(function () {	
+			var sampleData = window.sampleData; // loaded from sampledata.js
+			
+			var nrecoPivotExt = new NRecoPivotTableExtensions({
+				wrapWith: '<div class="pvtTableRendererHolder"></div>',  // special div is needed by fixed headers when used with pivotUI
+				fixedHeaders : true
+			});
+			
+			var stdRendererNames = ["Table","Table Barchart","Heatmap","Row Heatmap","Col Heatmap"];
+			var wrappedRenderers = $.extend( {}, $.pivotUtilities.renderers);
+			$.each(stdRendererNames, function() {
+				var rName = this;
+				wrappedRenderers[rName] = nrecoPivotExt.wrapTableRenderer(wrappedRenderers[rName]);
+			});
+
+			$('#samplePivotTable').pivotUI(sampleData, {
+				renderers: wrappedRenderers,
+				rendererOptions: { sort: { direction : "desc", column_key : [ 2014 ]} },
+				vals: ["Total"],
+				rows: ["Country"],
+				cols: ["Year"],
+				aggregatorName : "Sum",
+				onRefresh: function (pivotUIOptions) {
+					// this is correct way to apply fixed headers with pivotUI
+					nrecoPivotExt.initFixedHeaders($('#samplePivotTable table.pvtTable'));
+					
+					// apply boostrap styles to pvt UI controls
+					$('#samplePivotTable select.pvtAttrDropdown:not(.form-control)').addClass('form-control input-sm');
+					$('#samplePivotTable select.pvtAggregator:not(.form-control), #samplePivotTable select.pvtRenderer:not(.form-control)').addClass('form-control input-sm');
+					$('#samplePivotTable>table:not(.table)').addClass('table');					
+				}
+			});
+			
+		});
+	</script>
+
+
+	<!-- lets include js with sample data -->
+	<script src="sampledata.js"></script>
+
+	
+		</div>
+	
+	</body>
+</html>

@@ -1,0 +1,493 @@
+<html>
+<head>
+	<title>NReco PivotTable.js Extensions Example</title>
+
+	<!-- pivottable.js requires jQuery -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+
+	<!-- jQuery UI sortable plugin for drag and drop - required only for pivotUI  -->
+	<script src="Scripts/jquery-ui-1.9.2.custom.min.js"></script>
+	<!-- OPTIONAL: support touch events (pivot table usage from mobile and tablet devices) -->
+	<script src="Scripts/jquery.ui.touch-punch.min.js"></script>
+
+
+	<!-- PivotTable.js plugin with renderers -->
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/pivot.min.js"></script>
+
+	<!-- note: renderers are OPTIONAL (useful are: google charts, c3 charts) -->
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/export_renderers.min.js"></script>
+
+	<!-- NReco extensions -->
+	<script src="Scripts/pivottable/nrecopivottableext.js"></script>
+
+	<!-- basic pivottable css -->
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/pivot.min.css" rel="stylesheet" type="text/css" />
+	<!-- NReco extensions css -->
+	<link href="Scripts/pivottable/nrecopivottableext.css" rel="stylesheet" />
+
+
+	<!-- some styles for this example -->
+	<style>
+		body {
+			font-family: Arial;
+		}
+
+		.container {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 1200px;
+		}
+
+		.infoBlock {
+			background-color: #F0F0F0;
+			border-radius: 6px;
+			padding: 20px;
+			padding-bottom: 10px;
+			margin-bottom: 20px;
+		}
+
+		.row {
+			margin-left: -15px;
+			margin-right: -15px;
+			box-sizing: border-box;
+		}
+
+		.col50 {
+			width: 50%;
+			float: left;
+			padding-left: 15px;
+			padding-right: 15px;
+			box-sizing: border-box;
+		}
+
+		.clearfix {
+			clear: both;
+		}
+
+		ul {
+			margin-top: 0px;
+			margin-bottom: 10px;
+		}
+
+		hr {
+			border-bottom: 0px;
+		}
+
+		pre {
+			font-size: 11px;
+		}
+
+		/* styles for responsive pivot UI */
+		table.pvtUi {
+			table-layout: fixed;
+			width: 100%;
+		}
+
+			table.pvtUi > tbody > tr:first-child > td:first-child {
+				width: 200px;
+			}
+
+		.pvtTableRendererHolder {
+			max-height: 300px;
+		}
+
+		.pvtRendererArea > div {
+			overflow: auto;
+		}
+	</style>
+</head>
+	<body>
+		<div class="container">
+		
+	<h1> NReco PivotTable.js Extensions</h1>
+	<div class="infoBlock">
+		<a href="http://www.nrecosite.com/pivot_table_aspnet.aspx">NReco WebPivot</a>
+		provides the following enhancements to the open-source <a href="https://github.com/nicolaskruchten/pivottable" target="_blank">pivottable</a> jQuery plugin:
+		<ul>
+			<li>sort by: labels, column or row values (click on labels)</li>
+			<li>fixed headers</li>
+			<li>extract pivot table data (json) for exporting to CSV or Excel</li>
+			<li>handle click on value for adding drill-down functionality</li>
+		</ul>
+		In case of any questions feel free to contact us: <a href="mailto:support@nrecosite.com">support@nrecosite.com</a>
+	</div>
+	
+	<h2>Example 1: Simple pre-configured pivot table</h2>
+	
+	<div class="row">
+		
+		<div class="col50">
+			<ul>
+				<li>uses NReco extensions features: sort (asc/desc), fixed headers</li>
+			</ul>
+<pre>var nrecoPivotExt = new NRecoPivotTableExtensions({
+	fixedHeaders : true
+});
+$("#samplePivotTable1").pivot(
+	sampleData,
+	{
+		rows: ["Year"],
+		cols: ["Country"],
+		rendererOptions : {	},
+		renderer : nrecoPivotExt.wrapTableRenderer(
+			$.pivotUtilities.renderers["Table"]) 
+	});	
+nrecoPivotExt.initFixedHeaders(
+	$("#samplePivotTable1").find('table.pvtTable') );	
+</pre>
+			
+			<script type="text/javascript">
+				$(function () {	
+					var sampleData = window.sampleData; // loaded from sampledata.js
+					
+					var nrecoPivotExt = new NRecoPivotTableExtensions({
+						fixedHeaders : true
+					});
+					
+					$("#samplePivotTable1").pivot(
+						sampleData,
+						{
+							rows: ["Year"],
+							cols: ["Country"],
+							rendererOptions : {  // note: this entry is required
+							   sort: { 
+								  labels:{"Year":"desc", "Country":"asc"} // you may specify asc/desc for each dimension separately
+							   }
+							   
+							   // sort by row values:
+							   /*
+							   sort: { 
+								  labels:{"Country":"asc"},
+								  direction : "desc",
+								  row_key : [ 2010 ]
+							   }							   
+							   */
+							   
+							   // sort by row totals:
+							   /*
+							   sort: { 
+								  labels:{"Country":"asc"},
+								  direction : "desc",
+								  row_totals : true
+							   }							   
+							   */							   
+							   
+							   // sort by column values:
+							   /*
+							   sort: { 
+								  labels:{"Year":"desc"},
+								  direction : "asc",
+								  column_key : [ "Germany" ]
+							   }							   
+							   */	
+
+							   // sort by column totals:
+							   /*
+							   sort: { 
+								  labels:{"Year":"desc"},
+								  direction : "desc",
+								  col_totals : true
+							   }							   
+							   */								   
+							   
+							},
+							renderer : nrecoPivotExt.wrapTableRenderer($.pivotUtilities.renderers["Table"])   // table renderer should be wrapped for sort/fixed headers!
+						}
+					);
+					//apply fixed headers
+					nrecoPivotExt.initFixedHeaders( $("#samplePivotTable1").find('table.pvtTable') );
+					
+				});
+			</script>
+			
+		</div>
+		<div class="col50">
+			<div id="samplePivotTable1"></div>
+		</div>	
+	</div>
+	<div class="clearfix"></div>
+	
+	<hr/>
+	
+	
+	<h2>Example 2: simple pivot table builder</h2>
+	
+	
+	<div class="row">
+		
+		<div class="col50">
+			<ul>
+				<li>wrap all table renderers for pivot UI</li>
+				<li>uses NReco extension features: sort (asc/desc), fixed headers</li>
+				<li>save/load report state</li>
+			</ul>
+<pre>var nrecoPivotExt = new NRecoPivotTableExtensions({
+	wrapWith: '&lt;div class="pvtTableRendererHolder"&gt;&gt;/div&gt;',
+	fixedHeaders : true,
+	onSortHandler : function(sortOpts) {
+		// save changed sort options in pivotUI state
+		// this handler is needed only if you need to save state of user-configured report
+		var pvtUIOpts = $('#samplePivotTable2').data("pivotUIOptions");
+		if (!pvtUIOpts.rendererOptions) pvtUIOpts.rendererOptions = {};
+		pvtUIOpts.rendererOptions.sort = sortOpts;		
+	}
+});
+var nrecoPivotExt = new NRecoPivotTableExtensions({
+	fixedHeaders : true
+});
+
+var stdRendererNames = ["Table","Table Barchart",
+	"Heatmap","Row Heatmap","Col Heatmap"];
+var wrappedRenderers = $.extend( {}, $.pivotUtilities.renderers);
+$.each(stdRendererNames, function() {
+	var rName = this;
+	wrappedRenderers[rName] = 
+		nrecoPivotExt.wrapTableRenderer(wrappedRenderers[rName]);
+});
+
+$('#samplePivotTable2').pivotUI(sampleData, {
+	renderers: wrappedRenderers,
+	// pivot table sort state, leave empty to apply default order (labels A-Z)
+	rendererOptions: { sort: { direction : "desc", column_key : [ 2014 ]} },
+	// pivot table setup
+	vals: ["Total"],
+	rows: ["Country"],
+	cols: ["Year"],
+	aggregatorName : "Sum",
+	onRefresh: function (pivotUIOptions) {
+		nrecoPivotExt.initFixedHeaders(
+			$('#samplePivotTable2 table.pvtTable'));
+	}
+});
+</pre>
+			
+			<script type="text/javascript">
+				$(function () {	
+					var sampleData = window.sampleData; // loaded from sampledata.js
+					
+					var nrecoPivotExt = new NRecoPivotTableExtensions({
+						wrapWith: '<div class="pvtTableRendererHolder"></div>',  // special div is needed by fixed headers when used with pivotUI
+						fixedHeaders : true,
+						onSortHandler : function(sortOpts) {
+							// save changed sort options in pivotUI state
+							var pvtUIOpts = $('#samplePivotTable2').data("pivotUIOptions");
+							if (!pvtUIOpts.rendererOptions) pvtUIOpts.rendererOptions = {};
+							pvtUIOpts.rendererOptions.sort = sortOpts;
+						}						
+					});
+					
+					var stdRendererNames = ["Table","Table Barchart","Heatmap","Row Heatmap","Col Heatmap"];
+					var wrappedRenderers = $.extend( {}, $.pivotUtilities.renderers);
+					$.each(stdRendererNames, function() {
+						var rName = this;
+						wrappedRenderers[rName] = nrecoPivotExt.wrapTableRenderer(wrappedRenderers[rName]);
+					});
+
+					$('#samplePivotTable2').pivotUI(sampleData, {
+						renderers: wrappedRenderers,
+						rendererOptions: { sort: { direction : "desc", column_key : [ 2014 ]} },
+						vals: ["Total"],
+						rows: ["Country"],
+						cols: ["Year"],
+						aggregatorName : "Sum",
+						onRefresh: function (pivotUIOptions) {
+							// this is correct way to apply fixed headers with pivotUI
+							nrecoPivotExt.initFixedHeaders($('#samplePivotTable2 table.pvtTable'));
+						}
+					});
+					
+				});
+			</script>
+			
+		</div>
+		<div class="col50">
+			<div id="samplePivotTable2"></div>
+			<br/>
+			<button id="saveStateBtn">Save state</button><br/>
+			<textarea id="reportState" rows="4" style="display:none;width:100%;"></textarea>
+			<button id="loadStateBtn" style="display:none;">Load state</button>
+			
+			<!-- save/load handlers -->
+			<script type="text/javascript">
+			$(function(){
+
+				// this function keeps parameters that may be configured by the user with pivotUI
+				var getPivotState = function (pivotOpts) {
+					var props = ["aggregatorName","cols","vals","rendererName","rows"];
+					var opts = {};
+					for (var pIdx = 0; pIdx < props.length; pIdx++) {
+						var p = props[pIdx];
+						opts[p] = pivotOpts[p];
+					}
+					if (pivotOpts.rendererOptions && pivotOpts.rendererOptions.sort) {
+						opts.rendererOptions = {
+							sort: pivotOpts.rendererOptions.sort
+						};
+					}
+					return opts;
+				};				
+				
+				
+				$('#saveStateBtn').click(function() {
+					var allPivotUIOpts = $('#samplePivotTable2').data("pivotUIOptions");
+					var pivotState = getPivotState(allPivotUIOpts);	
+					
+					$('#reportState').val( JSON.stringify(pivotState) ).show();
+					$('#loadStateBtn').show();
+				});
+				
+				$('#loadStateBtn').click(function() {
+					var pivotStateJSON = $('#reportState').val();
+					if ($.trim(pivotStateJSON)=="") {
+						alert('Cannot load empty report state');
+						return;
+					}
+						
+					var pivotState = JSON.parse( pivotStateJSON );
+					
+					// to load report state pivotUI should be re-initalized
+					var currentOptions = $('#samplePivotTable2').data("pivotUIOptions");
+					$('#samplePivotTable2').pivotUI(sampleData, $.extend(currentOptions,pivotState), true);
+				});
+			});
+			</script>
+
+		</div>	
+	</div>
+	<div class="clearfix"></div>
+	
+	<hr/>	
+	
+	<h2>Example 3: Drill-down handler and export pivot data</h2>	
+
+	<div class="row">
+		
+		<div class="col50">
+			<ul>
+				<li>wrap table renderer with pivot data export accessor</li>
+				<li>handle click on the cells with values (drill-down)</li>
+			</ul>
+			The following code may be used for accessing pivot data values (for export functions, for instance):
+<pre>var reportData = $('#samplePivotTable3 .pivotExportData').data('getPivotExportData')();</pre>
+<button onclick="alert( JSON.stringify( $('#samplePivotTable3 .pivotExportData').data('getPivotExportData')() ) )">Try it: get pivot data</button>
+			
+			<script type="text/javascript">
+				$(function () {	
+					var sampleData = window.sampleData; // loaded from sampledata.js
+					
+					var nrecoPivotExt = new NRecoPivotTableExtensions({
+						wrapWith: '<div class="pvtTableRendererHolder"></div>',  // special div is needed by fixed headers when used with pivotUI
+						fixedHeaders : true,
+						drillDownHandler: function (attrFilter) {
+							// handle drill-down somehow
+							alert('Drill-down for: '+JSON.stringify( attrFilter ) );
+						}					
+					});
+					
+					var stdRendererNames = ["Table","Table Barchart","Heatmap","Row Heatmap","Col Heatmap"];
+					var wrappedRenderers = $.extend( {}, $.pivotUtilities.renderers);
+					$.each(stdRendererNames, function() {
+						var rName = this;
+						wrappedRenderers[rName] = 
+							nrecoPivotExt.wrapPivotExportRenderer(
+								nrecoPivotExt.wrapTableRenderer(wrappedRenderers[rName]));
+					});
+					
+					$('#samplePivotTable3').pivotUI(sampleData, {
+						renderers: wrappedRenderers,
+						rendererOptions: { sort: { direction : "desc", column_key : [ 2014 ]} },
+						vals: ["Total"],
+						rows: ["Customer"],
+						cols: ["Year"],
+						aggregatorName : "Sum",
+						onRefresh: function (pivotUIOptions) {
+							// this is correct way to apply fixed headers with pivotUI
+							nrecoPivotExt.initFixedHeaders($('#samplePivotTable3 table.pvtTable'));
+						}
+					});
+					
+				});
+				//
+			</script>
+			
+		</div>
+		<div class="col50">
+			<div id="samplePivotTable3" style="min-height:500px;"></div>
+		
+		</div>	
+	</div>
+	<div class="clearfix"></div>	
+	<hr/>	
+	
+	<h2>Example 4: Add C3 Charts renderer</h2>	
+	
+<script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/c3_renderers.min.js"></script>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css" rel="stylesheet" />   	
+	
+			Include C3 renderer dependencies:
+<pre>
+&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js">&lt;/script>
+&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js">&lt;/script>
+&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.7.0/c3_renderers.min.js">&lt;/script>
+&lt;link href="//cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css" rel="stylesheet" />    
+</pre>
+			Add C3 renderers to "Example 3" code:
+<pre>
+var wrappedRenderers = $.extend( {}, $.pivotUtilities.renderers, $.pivotUtilities.c3_renderers);
+</pre>
+
+			<script type="text/javascript">
+				$(function () {	
+					var sampleData = window.sampleData; // loaded from sampledata.js
+					
+					var nrecoPivotExt = new NRecoPivotTableExtensions({
+						wrapWith: '<div class="pvtTableRendererHolder"></div>',  // special div is needed by fixed headers when used with pivotUI
+						fixedHeaders : true		
+					});
+					
+					var stdRendererNames = ["Table","Table Barchart","Heatmap","Row Heatmap","Col Heatmap"];
+					
+					var wrappedRenderers = $.extend( {}, $.pivotUtilities.renderers, $.pivotUtilities.c3_renderers);
+					$.each(stdRendererNames, function() {
+						var rName = this;
+						wrappedRenderers[rName] = 
+							nrecoPivotExt.wrapPivotExportRenderer(
+								nrecoPivotExt.wrapTableRenderer(wrappedRenderers[rName]));
+					});
+					
+					$('#samplePivotTable4').pivotUI(sampleData, {
+						renderers: wrappedRenderers,
+						rendererOptions: { sort: { direction : "desc", column_key : [ 2014 ]} },
+						vals: ["Total"],
+						rows: [],
+						cols: ["Year"],
+						rendererName:"Bar Chart",
+						aggregatorName : "Sum",
+						onRefresh: function (pivotUIOptions) {
+							// this is correct way to apply fixed headers with pivotUI
+							nrecoPivotExt.initFixedHeaders($('#samplePivotTable4 table.pvtTable'));
+						}
+					});
+					
+				});
+				//
+			</script>			
+			
+			
+			<div id="samplePivotTable4" style="min-height:500px;"></div>
+
+
+	<div class="clearfix"></div>			
+
+	
+	
+	<!-- lets include js with sample data -->
+	<script src="sampledata.js"></script>
+
+	
+	  </div>
+	
+	</body>
+</html>

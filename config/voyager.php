@@ -189,21 +189,26 @@ return [
     // Here you can specify additional assets you would like to be included in the master.blade
     'additional_css' => [
         //'css/custom.css',
-        'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css',
-        'https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css',
-        'https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.dataTables.min.css',
-        'https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.dataTables.min.css',
-        'https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css'
+        'css/select2.min.css',
+        'css/toastr.min.css',
+        'css/jquery.dataTables.min.css',
+        'css/fixedColumns.dataTables.min.css',
+        'css/fixedHeader.dataTables.min.css',
+        'css/jquery.dataTables.min.css',
+        'css/pivot.min.css',
+        'js/pivotTable/Scripts/pivottable/nrecopivottableext.css'
     ],
 
     'additional_js' => [
         'js/custom.js',
-        'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js',
-        'https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js',
-        'https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js',
-        'https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js',
+        'js/select2.min.js',
+        'js/toastr.min.js',
+        'js/jquery.dataTables.min.js',
+        'js/dataTables.fixedColumns.min.js',
+        'js/dataTables.fixedHeader.min.js',
+        'js/pivot.min.js',
+        'js/jquery-ui.min.js',
+        'js/pivotTable/Scripts/pivottable/nrecopivottableext.js'
         //'https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js'
     ],
 
