@@ -131,11 +131,11 @@
                     },rendererOptions: {
                     table: {
                         clickCallback: function(e, value, filters, pivotData){
-                            var names = [];
+                            /*var names = [];
                             console.log(filters);
                             pivotData.forEachMatchingRecord(filters,
                                 function(record){ names.push(record.delivered); });
-                            alert(names.join("\n"));
+                            alert(names.join("\n"));*/
                         }
                     }
                 }
