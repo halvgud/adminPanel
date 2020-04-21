@@ -132,7 +132,7 @@
                     table: {
                         clickCallback: function(e, value, filters, pivotData){
                             /*var names = [];
-                            console.log(filters);
+                            console.log(filters); 
                             pivotData.forEachMatchingRecord(filters,
                                 function(record){ names.push(record.delivered); });
                             alert(names.join("\n"));*/
