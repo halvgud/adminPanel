@@ -153,7 +153,7 @@
                       $(this).find('th').eq(1).html('Contract');
                       $(this).find('th').eq(2).html('Payment Term');
                       $(this).find('th').eq(3).html('Model');
-                      $(this).find('th').eq(4).html('Qty');
+                      $(this).find('th').eq(4).html('Quantity');
                       $(this).find('th').eq(5).html('Shipment Date');
                  }
                  if(i>1&&i<$('.pvtTable').find('tr').length-1){
