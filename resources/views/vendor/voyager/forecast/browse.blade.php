@@ -90,7 +90,7 @@
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         <div class="col-md-12">
-                            <div id="output"></div>
+                            <div class="table-responsive" id="output"></div>
                         </div>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
                 }
                 }
              $('#output' ).pivot(myServices, propertiesTable);
-             $('.pvtTable').addClass('table table-responsive dataTable nowrap'); 
+             $('.pvtTable').addClass('table'); 
              // $('.pvtAxisLabel th[html="contract"] ').before('<th>actions</th>');
              $('.pvtTable').find('tr').each(function(i,v){
                  if(i==0){
