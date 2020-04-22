@@ -101,7 +101,7 @@
                     array_merge([
                          'bPaginate'=>false,
                          'bInfo'=>false,
-                        "columnDefs" => [['targets' => [-1,-2,-3],  'className'=>'dt-body-right']],
+                        "columnDefs" => [['targets' => [-1,-2,-3],  'className'=>'dt-body-right'],['width'=>'30%','targets'=>[0]]],
                         'footer'=>true
                     ])
                 , true) !!};
