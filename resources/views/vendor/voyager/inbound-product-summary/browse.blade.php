@@ -61,7 +61,7 @@
                                                 $data->{$row->field} = $data->{$row->field.'_browse'};
                                             }
                                             @endphp
-                                            <td>
+                                            <td product_id='{{$data->product_id}}'>
                                                 @include('voyager::multilingual.input-hidden-bread-browse')
                                                     {{ mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field} }}
                                             </td>
@@ -105,9 +105,15 @@
                         'footer'=>true
                     ])
                 , true) !!};
+                options['rowCallback']=function(row,data){
+                    console.log(row);
+                    console.log(data);
+                    var prodid= $('td:eq(0)',row).attr('product_id');
+                    $('td:eq(0)',row).prepend(   '<a href="{{url()->current()}}/filter/'+prodid+'" title="View" class="btn btn-sm btn-warning view"><i class="voyager-eye"></i> <span class="hidden-xs hidden-sm"></span></a>');
+                };
                 options['footerCallback']=  function ( row, data, start, end, display ) {
                     var api = this.api(), data;
-                            //console.log(api.column(3).data());
+                            console.log(api.column(0).data());
                     // Remove the formatting to get integer data for summation
                     var intVal = function ( i ) {
                         if(typeof i === 'string'){

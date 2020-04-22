@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,4 +20,8 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+    Route::get('inbound-product-summary/filter/{model}',function(Request $request,$route){
+        $var = new App\Http\Controllers\Voyager\InboundProductSummaryController();
+        return $var->indexByModel($request,$route);
+    });
 });
