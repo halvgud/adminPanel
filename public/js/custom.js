@@ -254,7 +254,7 @@ if ($('input[name="DynamicField"').length) {
     });
 }
 function appendModal(callback,name,type) {
-    fetch('http://voyager.local/public/api/products')  //
+    fetch('http://dtmwarehouselogistics.com/public/api/products')  //http://voyager.local/public/api/products
         .then(response => {
             return response.json();
         })
