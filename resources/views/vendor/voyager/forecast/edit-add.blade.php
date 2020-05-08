@@ -97,7 +97,7 @@
 <table class="table table-condensed" id="forecast">
     <thead id="headers" class="headers">
         <tr>
-            <th title='date'>Daily Capacity</th>
+            <th title='date'>Date</th>
             <th title='qty'>Qty</th>
             <th title='in_transit'>In Transit</th>
             <th title='inspected'>Inspected</th>
@@ -109,10 +109,10 @@
         @foreach($dataTypeContent2 as $row)
             <tr id="{{$row->id}}">
             <td title='date'><input type="date" class="form-control" name="shipment_date" placeholder="Shipment Date" value="{{$row->date}}" /></td>
-            <td title='qty'><input type="number" class="form-control" name="qty" required="" step="any" placeholder="qty" value="{{$row->qty}}" /></td>
-            <td title='in_transit'><input type="number" class="form-control" name="in_transit" required="" step="any" placeholder="in_transit" value="{{$row->in_transit}}" /></td>
-            <td title='inspected'><input type="number" class="form-control" name="inspected" required="" step="any" placeholder="inspected" value="{{$row->inspected}}" /></td>
-            <td title='delivered'><input type="number" class="form-control" name="delivered" required="" step="any" placeholder="delivered" value="{{$row->delivered}}" /> </td>
+            <td title='qty'><input type="number" class="form-control sumQty" name="qty" required="" step="any" placeholder="qty" value="{{$row->qty}}" /></td>
+            <td title='in_transit'><input type="number" class="form-control sumQty" name="in_transit" required="" step="any" placeholder="in_transit" value="{{$row->in_transit}}" /></td>
+            <td title='inspected'><input type="number" class="form-control sumQty" name="inspected" required="" step="any" placeholder="inspected" value="{{$row->inspected}}" /></td>
+            <td title='delivered'><input type="number" class="form-control sumQty" name="delivered" required="" step="any" placeholder="delivered" value="{{$row->delivered}}" /> </td>
         </tr>
         @endforeach
         @endif
@@ -170,7 +170,6 @@
     <script>
         var params = {};
         var $file;
-
         function deleteHandler(tag, isMulti) {
           return function() {
             $file = $(this).siblings(tag);
@@ -201,25 +200,44 @@
 
             return [year, month, day].join('-');
         }
+        var t ;
         $('document').ready(function () {
+                    jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
+                        return this.flatten().reduce( function ( a, b ) {
+                            console.log(a+$(b).val());
+                            if ( typeof a === 'string' ) {
+                                a = a.replace(/[^\d.-]/g, '') * 1;
+                            }
+                            if ( typeof b === 'string' ) {
+                                b = b.replace(/[^\d.-]/g, '') * 1;
+                            }
+                    
+                            return a + b;
+                        }, 0 );
+                    } );
                 $('.toggleswitch').bootstrapToggle();
-                var t = $('#forecast').DataTable();
+               t = $('#forecast').DataTable();
                 var counter = 1;
                 var tomorrow = new Date();
                 $('#newLine').on( 'click', function () {
                       var newDate=tomorrow.setDate(tomorrow.getDate() + 1);
                     t.row.add( [
                         '<input type="date" class="form-control" name="shipment_date" placeholder="Shipment Date" value="'+formatDate( newDate)+'">',
-                        '<input type="number" class="form-control" name="qty" required="" step="any" placeholder="qty" value="0">',
-                        '<input type="number" class="form-control" name="in_transit" required="" step="any" placeholder="in_transit" value="0">',
-                        '<input type="number" class="form-control" name="inspected" required="" step="any" placeholder="inspected" value="0">',
-                        '<input type="number" class="form-control" name="delivered" required="" step="any" placeholder="delivered" value="0">'
+                        '<input type="number" class="form-control sumQty" name="qty" required="" step="any" placeholder="qty" value="0">',
+                        '<input type="number" class="form-control sumQty" name="in_transit" required="" step="any" placeholder="in_transit" value="0">',
+                        '<input type="number" class="form-control sumQty" name="inspected" required="" step="any" placeholder="inspected" value="0">',
+                        '<input type="number" class="form-control sumQty" name="delivered" required="" step="any" placeholder="delivered" value="0">'
                     ] ).draw( false );
             
                     counter++;
                 } );
- 
-    // Automatically add a first row of data
+                var sumValues=t.column( 1 ).data().sum()+t.column( 2 ).data().sum()+t.column( 3 ).data().sum()+t.column( 4 ).data().sum();
+                var positive=-1*sumValues;
+                var totalQty= $('input[name="quantity"]').val();
+                if(positive>totalQty){
+                    Swal.fire('error','Total Quantity must be equal or less than the sum of the lines','error');
+                }
+                // Automatically add a first row of data
             //$('#newLine').click();
 
 /*$('#forecast').on( 'dblclick', 'tbody tr td', function () {
@@ -252,6 +270,20 @@ function closeInput(elm) {
 var counter=0;
 
     $(document).submit(function myFormSubmitCallback(event) {
+        var sum=0;
+        $('.sumQty').each(function(i,v){
+            var val=$(this).val();
+            sum+=parseInt(val);
+        });
+        var sumValues=sum;
+                var positive=sumValues;
+                console.log(positive);
+                var totalQty= $('input[name="quantity"]').val();
+                console.log(totalQty);
+                if(positive>totalQty){
+                    Swal.fire('error','Total Quantity must be equal or less than the sum of the lines','error');
+                    event.preventDefault();
+                }
         var myRows = {};
         var headers = $("th").map(function () {
             return $(this).attr("title");

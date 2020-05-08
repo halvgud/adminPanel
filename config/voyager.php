@@ -208,7 +208,8 @@ return [
         'js/dataTables.fixedHeader.min.js',
         'js/pivot.min.js',
         'js/jquery-ui.min.js',
-        'js/pivotTable/Scripts/pivottable/nrecopivottableext.js'
+        'js/pivotTable/Scripts/pivottable/nrecopivottableext.js',
+        'https://cdn.jsdelivr.net/npm/sweetalert2@9'
         //'https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js'
     ],
 
