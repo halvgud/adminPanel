@@ -39,7 +39,6 @@ if ($('input[name="DynamicField"').length) {
     });
     var InboundLines = {};
     $(document).on('change', '.selectModel', function () {
-        console.log('entro')
         var palletsize = $('option:selected', this).attr('palletsize');
         var cartonsize = $('option:selected', this).attr('cartonsize');
         $('.stdPackPallet').text(palletsize);
@@ -47,6 +46,7 @@ if ($('input[name="DynamicField"').length) {
         $('.cartonsinpallet').val(palletsize);
         $('.stdPackCarton').text(cartonsize);
     });
+
     var i = 0;
     var lineId = "";
     var editLineId = "";
@@ -254,7 +254,9 @@ if ($('input[name="DynamicField"').length) {
     });
 }
 function appendModal(callback,name,type) {
-    fetch('https://dtmwarehouselogistics.com/public/api/products')  //http://voyager.local/public/api/products
+    Swal.showLoading();
+    //fetch('https://dtmwarehouselogistics.com/public/api/products') 
+    fetch('http://voyager.local/public/api/products')  //http://voyager.local/public/api/products
         .then(response => {
             return response.json();
         })
@@ -264,18 +266,24 @@ function appendModal(callback,name,type) {
             if (modal.length == 0) {
                 modal = callModal(products);
                 $('input[name="' + name + '"]').closest('div').append(modal);
+                // $(document).on('load','.select2',function(){
+                console.log('entro');
+                $('.selectModel').select2({ placeholder: 'Select an option',width:350});
+    //});
             }
             $('#myModalScan').modal({
-                backdrop: 'static',
                 keyboard: false
             });
             callback();
             console.log(json);
+            Swal.close();
         });
 };
 //outboundReceiving////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+$('body').on('DOMNodeInserted', 'select', function () {
+    $(this).select2();
+});
 
 
 
@@ -294,13 +302,33 @@ if ($('input[name="DynamicField2"').length) {
     });
     var InboundLines = {};
     $(document).on('change', '.selectModel', function () {
-        console.log('entro')
+        Swal.showLoading();
         var palletsize = $('option:selected', this).attr('palletsize');
         var cartonsize = $('option:selected', this).attr('cartonsize');
         $('.stdPackPallet').text(palletsize);
         $('.unitsincarton').val(cartonsize);
         $('.cartonsinpallet').val(palletsize);
         $('.stdPackCarton').text(cartonsize);
+        $('.palletsscc').empty();
+        $('#location').val('');
+        fetch('http://voyager.local/public/api/products/' + $(this).val() + '/pallets')  //http://voyager.local/public/api/products
+            .then(response => {
+                console.log('entro')
+                return response.json();
+            })
+            .then(json => {
+                var pallets = json.data;
+                console.log(pallets);
+                $.each(pallets, function (i, v) {
+                    var option = new Option(v.palletsscc, v.palletsscc, true, true);
+                    option.setAttribute('location',v.location);
+                    $('.palletsscc').select2().append(option).trigger('change');
+                });
+            Swal.close();
+            });
+    });
+    $(document).on('change', '.palletsscc', function () {
+        $('#location').val($(this).find('option:selected').attr('location'));
     });
     var i = 0;
     var lineId = "";
@@ -507,9 +535,10 @@ if ($('input[name="DynamicField2"').length) {
 
     });
 }
+
 function callModal(products, type) {
     var modal =
-        '<div class="modal fade divBody" id="myModalScan" role="dialog" data-replace="true" style="display: none;" aria-hidden="false">' +
+        '<div class="modal fade divBody" id="myModalScan" role="dialog" data-replace="true" style="display: none;"  aria-hidden="true" data-backdrop="false" >' +
         '    <div class="modal-dialog modal-lg">' +
         '        <div class="modal-content" id="prodUnitsContent">' +
         '            <div class="modal-header">' +
@@ -519,9 +548,9 @@ function callModal(products, type) {
         '            <div class="modal-body">' +
         '                <div class="row">' +
         '                        <div class="form-group col-lg-6">' +
-        '                            <label>Select a Model</label>' +
-        '                            <select name="selectModel" id="selectModel" class="form-control inboundLines selectModel select2 "  tabindex="9">' +
-        '                                <option value="0" selected="selected">[- Please select a value -]</option>';
+        '                            <label>Select a Model</label><br>' +
+        '                            <select name="selectModel" id="selectModel" class="form-control inboundLines selectModel select2 " >' ;
+        //'                                <option value="0" selected="selected">[- Please select a value -]</option>';
     $.each(products, function (i, v) {
         modal += ' <option value="' + v.id + '" palletsize="' + v.palletsize + '" cartonsize="' + v.cartonsize + '">' + v.model + '</option>';
     });
@@ -529,27 +558,27 @@ function callModal(products, type) {
         '                        </div>' + //collg6
         '                        <div class="form-group col-lg-6">' +
         '                            <label for="PalletSSCC">Pallet Number</label>' +
-        '                                <input type="text" name="palletsscc" value="" class="form-control text-uppercase inboundLines" id="palletsscc" placeholder="Pallet Number" data-title="Please enter a  Number"   tabindex="11">' +
+        '                                <select name="palletsscc" value="" class="form-control text-uppercase inboundLines palletsscc select2" id="palletsscc" placeholder="Pallet Number" data-title="Please enter a  Number"  ></select>' +
         '                        </div>' + //collg6
         '                </div>' +
         '                <div class="row">' +
         '                            <div class="form-group col-lg-4">' +
         '                                <label for="cartonsinpallet">Cartons in Pallet<span class="label label-default stdPackPallet"></span><span class="calc"></span></label>' +
-        '                                    <input type="text" name="cartonsinpallet" value="" class="form-control text-uppercase qtyInput inboundLines cartonsinpallet" id="cartonsinpallet" placeholder="Cartons in Pallet" data-title="Please enter a Number"   tabindex="12">' +
+        '                                    <input type="text" name="cartonsinpallet" value="" class="form-control text-uppercase qtyInput inboundLines cartonsinpallet" id="cartonsinpallet" placeholder="Cartons in Pallet" data-title="Please enter a Number"   >' +
         '                            </div>' +
         '                            <div class="form-group col-lg-4">' +
         '                                <label for="unitsincarton">Units in Carton <span class="label label-default stdPackCarton unitsincarton"></span><span class="calc"></span></label>' +
-        '                                    <input type="text" name="unitsincarton" value="" class="form-control text-uppercase qtyInput inboundLines unitsincarton" id="unitsincarton" placeholder="units in carton" data-title="Please enter a valid Number"   tabindex="13">' +
+        '                                    <input type="text" name="unitsincarton" value="" class="form-control text-uppercase qtyInput inboundLines unitsincarton" id="unitsincarton" placeholder="units in carton" data-title="Please enter a valid Number"  >' +
         '                            </div>' +
         '                            <div class="form-group col-lg-4">' +
         '                                <label for="Area">Location</label>' +
-        '                                    <input type="text" name="location" value="" class="form-control text-uppercase inboundLines" id="location" placeholder="location" data-title="Please enter a location"  tabindex="14">' +
+        '                                    <input type="text" name="location" value="" class="form-control text-uppercase inboundLines" id="location" placeholder="location" data-title="Please enter a location"  >' +
         '                            </div>' +
         '                </div>' +
         '            <div class="row">' +
         '                <div class="form-group col-lg-12">' +
         '                    <label for="comments">Comments</label>' +
-        '                    <textarea id="comments" class="form-control inboundLines" name="comments" rows="5" placeholder="Comments" tabindex="15"></textarea>' +
+        '                    <textarea id="comments" class="form-control inboundLines" name="comments" rows="5" placeholder="Comments" ></textarea>' +
         '                </div>' +
         '            </div>' +
         '            </div>' +

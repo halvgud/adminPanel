@@ -14,14 +14,14 @@ use Illuminate\Support\Facades\DB;
 use TCG\Voyager\Events\BreadDataAdded;
 use Illuminate\Routing\Controller as BaseController;
 
-class InboundProductSummaryController extends \TCG\Voyager\Http\Controllers\VoyagerBaseController
+class OutboundProductSummaryController extends \TCG\Voyager\Http\Controllers\VoyagerBaseController
 {
     public function indexByModel(Request $request,$idproduct)
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
-        $slug = 'inbound-receivings';
+        $slug = 'outbound-shippings';
             // GET THE DataType based on the slug
-        $dataType = Voyager::model('DataType')->where('slug', '=', 'inbound-receivings')->first();
+        $dataType = Voyager::model('DataType')->where('slug', '=', 'outbound-shippings')->first();
         //dd($dataType);
         // Check permission
         //$this->authorize('browse', app($dataType->model_name));
@@ -74,7 +74,7 @@ class InboundProductSummaryController extends \TCG\Voyager\Http\Controllers\Voya
                 $search_value = ($search->filter == 'equals') ? $search->value : '%' . $search->value . '%';
                 $query->where($search->key, $search_filter, $search_value);
             }
-            $query->whereRaw($idproduct. ' IN (SELECT product_id FROM inbound_lines ir where ir.inbound_receiving_id=`inbound_receivings`.id and ir.deleted_at is null)');
+            $query->whereRaw($idproduct. ' IN (SELECT product_id FROM outbound_lines ir where ir.outbound_shipping_id=`outbound_shippings`.id and ir.deleted_at is null)');
 
             if ($orderBy && in_array($orderBy, $dataType->fields())) {
                 $querySortOrder = (!empty($sortOrder)) ? $sortOrder : 'desc';
@@ -83,7 +83,7 @@ class InboundProductSummaryController extends \TCG\Voyager\Http\Controllers\Voya
                     $getter,
                 ]);
             } elseif ($model->timestamps) {
-                $dataTypeContent = call_user_func([$query->latest('inbound_receivings.created_at'), $getter]);
+                $dataTypeContent = call_user_func([$query->latest('outbound_shippings.created_at'), $getter]);
             } else {
                 $dataTypeContent = call_user_func([$query->orderBy($model->getKeyName(), 'DESC'), $getter]);
             }
@@ -136,7 +136,7 @@ class InboundProductSummaryController extends \TCG\Voyager\Http\Controllers\Voya
         $view = 'voyager::bread.browse';
 
         //if (view()->exists("voyager::$slug.browse-filter")) {
-            $view = "voyager::$slug.browsefilter";
+            //$view = "voyager::$slug.browsefilter";
 
         //}
        // dd($dataTypeContent);

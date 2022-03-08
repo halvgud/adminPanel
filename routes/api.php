@@ -19,4 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('register', 'API\RegisterController@register');
 Route::resource('products', 'API\ProductController');
+Route::get('products/{product}/pallets', 'API\ProductController@getPallets');
 Route::resource('inboundline', 'API\InboundLineController');

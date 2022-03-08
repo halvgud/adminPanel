@@ -20,8 +20,12 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
-    Route::get('inbound-product-summary/filter/{model}',function(Request $request,$route){
+    Route::get('inbound-product-summary/filter/{model}', function (Request $request, $route) {
         $var = new App\Http\Controllers\Voyager\InboundProductSummaryController();
-        return $var->indexByModel($request,$route);
+        return $var->indexByModel($request, $route);
+    });
+    Route::get('outbound-product-summary/filter2/{model}', function (Request $request, $route) {
+        $var = new App\Http\Controllers\Voyager\OutboundProductSummaryController();
+        return $var->indexByModel($request, $route);
     });
 });

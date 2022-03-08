@@ -192,6 +192,11 @@
 @stop
 
 @section('javascript')
+<style>
+.swal2-container {
+  z-index: 1000000  !important;
+}
+</style>
     <script>
         var params = {};
         var $file;

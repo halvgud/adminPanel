@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Product;
 use Validator;
-
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends BaseController
 {
@@ -21,6 +21,12 @@ class ProductController extends BaseController
     {
         $products = Product::all();
         return $this->sendResponse($products->toArray(), 'Products retrieved successfully.');
+    }
+
+    public function getPallets($product){
+        $dataTypeContent2 = DB::table('inbound_lines')->where('product_id', $product)
+            ->select('*')->get()->all();
+        return  $this->sendResponse($dataTypeContent2, 'Products retrieved successfully.');
     }
 
 
